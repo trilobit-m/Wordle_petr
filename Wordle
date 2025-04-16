@@ -1,3 +1,5 @@
+# ЭТО РАБОТАЕТ, НО НЕ В VISUAL STUDIO 2022 (не работают кодировки) (в VISUAL STUDIO 2019 - работает) НЕ В IDLE (не поддерживает цветовой ввод) НЕ В ОНЛАЙН КОМПИЛЯТОРАХ (нет библиотеки COLORAMA)
+
 import random
 import colorama
 from colorama import Fore
