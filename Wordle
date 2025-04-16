@@ -1,0 +1,90 @@
+import random
+import colorama
+from colorama import Fore
+
+colorama.init()
+
+def bold_text(text):
+    bold_start = '\033[1m'
+    bold_end = '\033[0m'
+    return bold_start + text + bold_end
+
+flag = True
+slova = ["гривна", "изотоп", "буртит", "зигзаг", "цезарь",
+         "бархат", "анчоус", "эпопея", "карбон", "вулкан",
+         "кивок", "винил", "кольт", "гнида", "аорта",
+         "занос", "алтын", "иудей", "морда", "юнкер",
+         "позор", "камео", "спрос", "лавка", "бабка",
+         "дурка", "дубок", "окно", "фора", "уезд"]
+count = 0
+vivod = list()
+
+# Глобальные переменные
+
+slovo = random.choice(slova)
+slova.remove(slovo)
+
+# Первое слово
+
+print("Рад приведствовать вас в игре Wordle!")
+
+print(bold_text(f"Длина слова равна {len(slovo)} буквам"))
+
+while ((a := input()).lower) != slovo or count < 6:
+    count += 1  # Счётчик попыток
+    
+    
+    if a == "/restart":
+        slovo = random.choice(slova)
+        slova.remove(slovo)
+        print(bold_text("Попробуйте снова!"))   # Команда перезапуска
+
+
+    elif a == "/pass":
+        flag = False
+        break   # Команда сдаться
+
+
+    elif a == "/help":
+        print("Загадано слово. У вас есть 6 попыток. Нажмите кнопку ВВОД, чтобы отправить.")
+        print("После каждой попытки цвет фона под буквами будет меняться, чтобы показать, насколько ваше предположение было близко к загаданному слову:")
+        print("-Зелёный цвет буквы означает что буква стоит на своём месте.")
+        print("-Жёлтый цвет буквы означает, что буква есть в слове, но соит не на своём месте.")
+        print()
+        print("Список возможных команд:")
+        print()
+        print("+ /help - получить помощь")
+        print("+ /pass - сдаться")
+        print("+ /restart - перезапуск")
+        print("+ /")    # Команда помощь
+
+
+    elif len(a) != len(slovo) or not a.isalpha():
+        print(bold_text("Слово не подходит!"))    # Проверка слова
+
+
+    else:
+        a1 = list()
+        a1.extend(a)
+        slovo1 = list()
+        slovo1.extend(slovo)
+        
+        slovo_bukvi = slovo1.copy()
+
+        for i in range(len(slovo)):
+            if a1[i] == slovo1[i]:
+                vivod.append(Fore.GREEN + a1[i])
+            elif a1[i] in slovo_bukvi:
+                slovo_bukvi.remove(a1[i])
+                vivod.append(Fore.YELLOW + a1[i])
+            else:
+                vivod.append(a1[i])
+    for i in vivod:
+        print(i, end="")
+    print()
+if flag and count <= 6:
+    print("Поздравляю, вы победили!")
+else:
+    print("К сожалению у вас не получилось победить.")
+
+# Вывод сообщения о победе
