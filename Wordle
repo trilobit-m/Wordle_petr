@@ -1,8 +1,6 @@
-# ЭТО РАБОТАЕТ, НО НЕ В VISUAL STUDIO 2022 (не работают кодировки) (в VISUAL STUDIO 2019 - работает) НЕ В IDLE (не поддерживает цветовой ввод) НЕ В ОНЛАЙН КОМПИЛЯТОРАХ (нет библиотеки COLORAMA)
-
 import random
 import colorama
-from colorama import Fore
+from colorama import Fore, Back, Style
 
 colorama.init()
 
@@ -32,22 +30,27 @@ print("Рад приведствовать вас в игре Wordle!")
 
 print(bold_text(f"Длина слова равна {len(slovo)} буквам"))
 
-while ((a := input()).lower) != slovo or count < 6:
+while ((a := input()).lower) != slovo and count < 6:
     count += 1  # Счётчик попыток
     
-    
-    if a == "/restart":
+    vivod = list()
+
+    if a == "=restart":
         slovo = random.choice(slova)
         slova.remove(slovo)
-        print(bold_text("Попробуйте снова!"))   # Команда перезапуска
+        print("Попробуйте снова!", f"Длина слова равна {len(slovo)} буквам")
+        count = 0
+        continue
+        # Команда перезапуска
 
 
-    elif a == "/pass":
+    elif a == "=pass":
         flag = False
+        a = input()
         break   # Команда сдаться
 
 
-    elif a == "/help":
+    elif a == "=help":
         print("Загадано слово. У вас есть 6 попыток. Нажмите кнопку ВВОД, чтобы отправить.")
         print("После каждой попытки цвет фона под буквами будет меняться, чтобы показать, насколько ваше предположение было близко к загаданному слову:")
         print("-Зелёный цвет буквы означает что буква стоит на своём месте.")
@@ -55,19 +58,22 @@ while ((a := input()).lower) != slovo or count < 6:
         print()
         print("Список возможных команд:")
         print()
-        print("+ /help - получить помощь")
-        print("+ /pass - сдаться")
-        print("+ /restart - перезапуск")
-        print("+ /")    # Команда помощь
+        print("+ =help - получить помощь")
+        print("+ =pass - сдаться")
+        print("+ =restart - перезапуск")
+        a = input()
+            # Команда помощь
 
 
     elif len(a) != len(slovo) or not a.isalpha():
-        print(bold_text("Слово не подходит!"))    # Проверка слова
-
+        print(bold_text("Слово не подходит!"))  # Проверка слова
+        continue
 
     else:
         a1 = list()
+        reserv = list()
         a1.extend(a)
+        vivod1 = list()
         slovo1 = list()
         slovo1.extend(slovo)
         
@@ -75,18 +81,30 @@ while ((a := input()).lower) != slovo or count < 6:
 
         for i in range(len(slovo)):
             if a1[i] == slovo1[i]:
-                vivod.append(Fore.GREEN + a1[i])
-            elif a1[i] in slovo_bukvi:
-                slovo_bukvi.remove(a1[i])
-                vivod.append(Fore.YELLOW + a1[i])
+                vivod.append(Fore.GREEN + a1[i] + Fore.WHITE)
+                slovo_bukvi[i] = "L"
+                reserv.append(a1[i])
             else:
                 vivod.append(a1[i])
-    for i in vivod:
+                reserv.append("*")
+        for i in range(len(slovo)):
+            if vivod[i] == reserv[i]:
+                vivod1.append(vivod[i])
+            else:
+                if vivod[i] in slovo_bukvi:
+                    slovo_bukvi.remove(vivod[i])
+                    vivod1.append(Fore.YELLOW + vivod[i] + Fore.WHITE)
+                else:
+                    vivod1.append(vivod[i])
+    for i in vivod1: 
         print(i, end="")
     print()
-if flag and count <= 6:
+    if reserv == slovo1:
+        break
+if flag and count < 6:
     print("Поздравляю, вы победили!")
 else:
     print("К сожалению у вас не получилось победить.")
+a = input()
 
 # Вывод сообщения о победе
